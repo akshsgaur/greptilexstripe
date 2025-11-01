@@ -70,8 +70,9 @@ export function AddRepositoryDialog() {
         user_id: user.id,
         name: repoName,
         full_name: `${owner}/${repoName}`,
+        owner,
         github_url: `https://github.com/${owner}/${repoName}`,
-        default_branch: "main",
+        branch: "main",
         is_indexed: false,
       })
 
@@ -104,7 +105,7 @@ export function AddRepositoryDialog() {
       <DialogTrigger asChild>
         <Button>
           <Plus className="h-4 w-4 mr-2" />
-          Add Repository
+          Buy Analysis with Stripe
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[525px]">
@@ -132,7 +133,7 @@ export function AddRepositoryDialog() {
             </Button>
             <Button type="submit" disabled={loading}>
               {loading && <Loader2 className="h-4 w-4 mr-2 animate-spin" />}
-              Add Repository
+              Buy Analysis with Stripe
             </Button>
           </DialogFooter>
         </form>

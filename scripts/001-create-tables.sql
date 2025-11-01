@@ -13,15 +13,18 @@ CREATE TABLE IF NOT EXISTS users (
 -- Create repositories table
 CREATE TABLE IF NOT EXISTS repositories (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-  user_id UUID NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   full_name TEXT NOT NULL,
   owner TEXT NOT NULL,
-  branch TEXT DEFAULT 'main',
-  is_indexed BOOLEAN DEFAULT FALSE,
+  description TEXT,
+  github_url TEXT NOT NULL,
+  branch TEXT NOT NULL DEFAULT 'main',
+  is_indexed BOOLEAN NOT NULL DEFAULT FALSE,
   indexing_status TEXT,
   status_endpoint TEXT,
   stripe_payment_id TEXT,
+  greptile_repository_id TEXT,
   created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
   UNIQUE(user_id, full_name)
