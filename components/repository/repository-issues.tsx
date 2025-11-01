@@ -53,6 +53,8 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
   const [isAnalyzing, setIsAnalyzing] = useState(false)
   const [analysis, setAnalysis] = useState<GreptileQueryResult | null>(null)
   const [analysisError, setAnalysisError] = useState<string | null>(null)
+  const [openAISummary, setOpenAISummary] = useState<string | null>(null)
+  const [summaryError, setSummaryError] = useState<string | null>(null)
 
   const isMountedRef = useRef(true)
 
@@ -159,6 +161,8 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
     setIsAnalyzing(true)
     setAnalysis(null)
     setAnalysisError(null)
+    setOpenAISummary(null)
+    setSummaryError(null)
 
     const sessionId = typeof crypto !== "undefined" && "randomUUID" in crypto ? crypto.randomUUID() : `${Date.now()}`
 
@@ -205,6 +209,37 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
     } catch (analysisError) {
       console.error("Error analyzing issue:", analysisError)
       setAnalysisError("We couldn't analyze this issue right now. Please try again later.")
+
+      try {
+        const summaryResponse = await fetch("/api/analysis/summary", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            repositoryId: repository.id,
+            issueTitle: issue.title,
+            issueBody: issue.body,
+          }),
+        })
+
+        if (!summaryResponse.ok) {
+          throw new Error("Summary request failed")
+        }
+
+        const summaryData: { summary?: string } = await summaryResponse.json()
+
+        if (summaryData.summary) {
+          setOpenAISummary(summaryData.summary)
+          setAnalysisError(null)
+        } else {
+          throw new Error("No summary returned")
+        }
+      } catch (summaryFetchError) {
+        console.error("Error generating summary:", summaryFetchError)
+        setSummaryError("We couldn't generate a summary for this issue right now.")
+        setAnalysisError(null)
+      }
     } finally {
       setIsAnalyzing(false)
     }
@@ -423,9 +458,29 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
               <Loader2 className="h-4 w-4 animate-spin text-primary" />
               Analyzing issue with Greptile. This may take a few seconds...
             </div>
+          ) : openAISummary ? (
+            <div className="mx-6 space-y-3 rounded-xl border border-border/50 bg-muted/20 px-5 py-6 text-left">
+              <h4 className="text-center text-sm font-semibold uppercase tracking-wide text-muted-foreground">Summary guidance</h4>
+              <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                {openAISummary
+                  .split(/\n{2,}/)
+                  .map((paragraph, index) => (
+                    <p key={index} className="whitespace-pre-wrap">
+                      {paragraph.trim()}
+                    </p>
+                  ))}
+              </div>
+              <p className="text-center text-xs text-muted-foreground/80">
+                Generated with OpenAI because Greptile guidance was unavailable.
+              </p>
+            </div>
           ) : analysisError ? (
             <div className="mx-6 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
               {analysisError}
+            </div>
+          ) : summaryError ? (
+            <div className="mx-6 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
+              {summaryError}
             </div>
           ) : analysis ? (
             <div className="space-y-6 px-6 pb-2 text-center">
