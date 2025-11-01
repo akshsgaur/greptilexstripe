@@ -63,7 +63,7 @@ export function RepositoryList({ repositories }: RepositoryListProps) {
             <Button asChild className="flex-1 rounded-full" size="sm">
               <Link href={`/dashboard/repo/${repo.id}`}>
                 <MessageSquare className="h-4 w-4 mr-2" />
-                Query
+                View issues
               </Link>
             </Button>
             <Button variant="outline" size="sm" asChild className="rounded-full">

@@ -328,20 +328,28 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
 
             <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               {issues.map((issue) => (
-                <Card key={issue.id} className="group flex flex-col border-border/40 bg-background/80 shadow-sm transition-shadow hover:shadow-md">
+                <Card
+                  key={issue.id}
+                  className="group flex h-full min-h-[320px] flex-col overflow-hidden border-border/40 bg-background/80 shadow-sm transition-shadow hover:shadow-md"
+                >
                   <CardHeader className="space-y-3">
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <CardTitle className="text-base leading-tight text-foreground transition-colors group-hover:text-primary">
+                        <CardTitle className="line-clamp-2 text-base leading-snug text-foreground transition-colors group-hover:text-primary">
                           #{issue.number} · {issue.title}
                         </CardTitle>
                         <p className="text-xs text-muted-foreground">
                           Opened {formatDistanceToNow(new Date(issue.created_at), { addSuffix: true })}
                         </p>
                       </div>
-                      <Button variant="outline" size="sm" asChild className="rounded-full border-border/60">
-                        <a href={issue.html_url} target="_blank" rel="noopener noreferrer">
-                          <ExternalLink className="mr-1.5 h-3.5 w-3.5" />
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        asChild
+                        className="rounded-full border-border/60 bg-background/80 px-3 py-1 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground"
+                      >
+                        <a href={issue.html_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5">
+                          <ExternalLink className="h-3.5 w-3.5" />
                           View
                         </a>
                       </Button>
@@ -382,15 +390,17 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
 
       <Dialog open={isModalOpen} onOpenChange={handleModalOpenChange}>
         <DialogContent className="w-full max-w-4xl overflow-hidden rounded-2xl border border-border/60 bg-gradient-to-br from-background via-background/95 to-muted/70 p-0 shadow-xl backdrop-blur sm:max-w-5xl">
-          <DialogHeader>
-            <DialogTitle>Issue Analysis</DialogTitle>
-            <DialogDescription>Greptile analyzes the repository to suggest the best way to fix this issue.</DialogDescription>
+          <DialogHeader className="items-center space-y-2 text-center">
+            <DialogTitle className="text-xl font-semibold">Issue Analysis</DialogTitle>
+            <DialogDescription className="text-sm text-muted-foreground">
+              Greptile analyzes the repository to suggest the best way to fix this issue.
+            </DialogDescription>
           </DialogHeader>
 
           {selectedIssue && (
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-semibold">
+            <div className="space-y-4 px-6 text-center sm:px-8">
+              <div className="space-y-2">
+                <h3 className="text-lg font-semibold text-foreground">
                   #{selectedIssue.number} · {selectedIssue.title}
                 </h3>
                 <p className="text-sm text-muted-foreground">
@@ -398,8 +408,10 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
                   <span>{selectedIssue.comments} comments</span>
                 </p>
               </div>
-              <ScrollArea className="max-h-32 rounded-md border border-border/40 p-3">
-                <p className="text-sm whitespace-pre-wrap">{selectedIssue.body || "No additional description provided."}</p>
+              <ScrollArea className="mx-auto max-h-56 w-full max-w-3xl overflow-hidden rounded-md border border-border/40 p-3">
+                <p className="text-sm whitespace-pre-wrap text-left break-words break-all">
+                  {selectedIssue.body || "No additional description provided."}
+                </p>
               </ScrollArea>
             </div>
           )}
@@ -407,20 +419,20 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
           <Separator />
 
           {isAnalyzing ? (
-            <div className="mx-1 flex items-center justify-center gap-3 rounded-xl border border-dashed border-primary/30 bg-primary/5 px-4 py-6 text-sm">
+            <div className="mx-6 flex items-center justify-center gap-3 rounded-xl border border-dashed border-primary/30 bg-primary/5 px-4 py-6 text-sm text-center">
               <Loader2 className="h-4 w-4 animate-spin text-primary" />
               Analyzing issue with Greptile. This may take a few seconds...
             </div>
           ) : analysisError ? (
-            <div className="mx-1 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive">
+            <div className="mx-6 rounded-xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-center text-sm text-destructive">
               {analysisError}
             </div>
           ) : analysis ? (
-            <div className="space-y-6">
+            <div className="space-y-6 px-6 pb-2 text-center">
               <div className="space-y-3">
                 <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Step-by-step guidance</h4>
-                <ScrollArea className="max-h-64 rounded-2xl border border-border/50 bg-background/80 p-4">
-                  <div className="space-y-3 text-sm leading-relaxed text-muted-foreground">
+                <ScrollArea className="mx-auto max-h-64 w-full max-w-3xl rounded-2xl border border-border/50 bg-background/80 p-4 text-left">
+                  <div className="space-y-3 text-sm leading-relaxed text-muted-foreground break-words">
                     {formattedAnalysisSections.length > 0
                       ? formattedAnalysisSections.map((section, index) => (
                           <p key={index} className="whitespace-pre-wrap">
@@ -437,7 +449,7 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
                   <h4 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                     Files to review
                   </h4>
-                  <ul className="mt-2 grid gap-2 text-sm md:grid-cols-2">
+                  <ul className="mx-auto mt-2 grid max-w-3xl gap-2 text-left text-sm md:grid-cols-2">
                     {uniqueSourceFiles.map((source) => (
                       <li
                         key={source.filepath}
@@ -454,12 +466,12 @@ export function RepositoryIssues({ repository }: RepositoryIssuesProps) {
               )}
             </div>
           ) : (
-            <div className="rounded-xl border border-dashed border-border/60 bg-muted/20 px-4 py-6 text-center text-sm text-muted-foreground">
+            <div className="mx-6 rounded-xl border border-dashed border-border/60 bg-muted/20 px-4 py-6 text-center text-sm text-muted-foreground">
               Click &ldquo;Analyze Issue&rdquo; to get Greptile guidance.
             </div>
           )}
 
-          <DialogFooter className="flex items-center justify-between border-t border-border/40 bg-muted/10 px-6 py-4">
+          <DialogFooter className="flex flex-col items-center justify-center gap-3 border-t border-border/40 bg-muted/10 px-6 py-4 sm:flex-row">
             {selectedIssue ? (
               <Button variant="outline" size="sm" asChild className="rounded-full border-border/60">
                 <a href={selectedIssue.html_url} target="_blank" rel="noopener noreferrer">
