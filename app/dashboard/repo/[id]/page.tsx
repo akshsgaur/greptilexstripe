@@ -1,8 +1,8 @@
 import { redirect } from "next/navigation"
 import { createServerClient } from "@/lib/supabase/server"
 import { DashboardHeader } from "@/components/dashboard/dashboard-header"
-import { RepositoryChat } from "@/components/repository/repository-chat"
 import { RepositoryInfo } from "@/components/repository/repository-info"
+import { RepositoryIssues } from "@/components/repository/repository-issues"
 
 interface RepositoryPageProps {
   params: Promise<{
@@ -40,7 +40,7 @@ export default async function RepositoryPage({ params }: RepositoryPageProps) {
 
       <main className="flex-1 flex flex-col">
         <RepositoryInfo repository={repository} />
-        <RepositoryChat repository={repository} />
+        <RepositoryIssues repository={repository} />
       </main>
     </div>
   )

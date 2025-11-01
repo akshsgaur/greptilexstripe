@@ -26,7 +26,7 @@ interface RepositoryListProps {
 export function RepositoryList({ repositories }: RepositoryListProps) {
   if (repositories.length === 0) {
     return (
-      <Card className="p-12 text-center">
+      <Card className="mx-auto w-full max-w-3xl rounded-3xl border-border/40 bg-background/80 p-12 text-center shadow-sm">
         <GitBranch className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
         <h3 className="text-lg font-semibold mb-2">No repositories yet</h3>
         <p className="text-muted-foreground mb-6">
@@ -37,9 +37,9 @@ export function RepositoryList({ repositories }: RepositoryListProps) {
   }
 
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div className="mx-auto grid w-full max-w-6xl gap-5 justify-items-stretch [grid-template-columns:repeat(auto-fit,minmax(320px,1fr))]">
       {repositories.map((repo) => (
-        <Card key={repo.id} className="p-6 hover:border-primary/50 transition-colors">
+        <Card key={repo.id} className="flex flex-col rounded-3xl border-border/40 bg-background/80 p-6 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg">
           <div className="flex items-start justify-between mb-4">
             <div className="flex-1 min-w-0">
               <h3 className="font-semibold text-lg truncate mb-1">{repo.name}</h3>
@@ -59,19 +59,19 @@ export function RepositoryList({ repositories }: RepositoryListProps) {
             <span>Added {formatDistanceToNow(new Date(repo.created_at), { addSuffix: true })}</span>
           </div>
 
-          <div className="flex gap-2">
-            <Button asChild className="flex-1" size="sm">
+          <div className="mt-auto flex gap-2">
+            <Button asChild className="flex-1 rounded-full" size="sm">
               <Link href={`/dashboard/repo/${repo.id}`}>
                 <MessageSquare className="h-4 w-4 mr-2" />
                 Query
               </Link>
             </Button>
-            <Button variant="outline" size="sm" asChild>
+            <Button variant="outline" size="sm" asChild className="rounded-full">
               <a href={repo.github_url} target="_blank" rel="noopener noreferrer">
                 <ExternalLink className="h-4 w-4" />
               </a>
             </Button>
-            <Button variant="outline" size="sm" className="text-destructive hover:text-destructive bg-transparent">
+            <Button variant="outline" size="sm" className="rounded-full bg-transparent text-destructive hover:text-destructive">
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
