@@ -13,7 +13,7 @@ interface Repository {
   full_name: string
   description: string | null
   github_url: string
-  default_branch: string
+  branch: string
   is_indexed: boolean
   created_at: string
   updated_at: string
@@ -54,7 +54,7 @@ export function RepositoryList({ repositories }: RepositoryListProps) {
 
           <div className="flex items-center gap-2 text-xs text-muted-foreground mb-4">
             <GitBranch className="h-3 w-3" />
-            <span>{repo.default_branch}</span>
+            <span>{repo.branch}</span>
             <span>•</span>
             <span>Added {formatDistanceToNow(new Date(repo.created_at), { addSuffix: true })}</span>
           </div>

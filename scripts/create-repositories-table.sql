@@ -1,13 +1,16 @@
--- Create repositories table
 CREATE TABLE IF NOT EXISTS repositories (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID NOT NULL REFERENCES auth.users(id) ON DELETE CASCADE,
   name TEXT NOT NULL,
   full_name TEXT NOT NULL,
+  owner TEXT NOT NULL,
   description TEXT,
   github_url TEXT NOT NULL,
-  default_branch TEXT NOT NULL DEFAULT 'main',
+  branch TEXT NOT NULL DEFAULT 'main',
   is_indexed BOOLEAN NOT NULL DEFAULT false,
+  indexing_status TEXT,
+  status_endpoint TEXT,
+  stripe_payment_id TEXT,
   greptile_repository_id TEXT,
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -17,6 +20,7 @@ CREATE TABLE IF NOT EXISTS repositories (
 -- Create index for faster queries
 CREATE INDEX IF NOT EXISTS idx_repositories_user_id ON repositories(user_id);
 CREATE INDEX IF NOT EXISTS idx_repositories_is_indexed ON repositories(is_indexed);
+CREATE INDEX IF NOT EXISTS idx_repositories_full_name ON repositories(full_name);
 
 -- Enable Row Level Security
 ALTER TABLE repositories ENABLE ROW LEVEL SECURITY;

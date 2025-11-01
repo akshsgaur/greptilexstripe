@@ -70,8 +70,9 @@ export function AddRepositoryDialog() {
         user_id: user.id,
         name: repoName,
         full_name: `${owner}/${repoName}`,
+        owner,
         github_url: `https://github.com/${owner}/${repoName}`,
-        default_branch: "main",
+        branch: "main",
         is_indexed: false,
       })
 

@@ -11,7 +11,7 @@ interface Repository {
   full_name: string
   description: string | null
   github_url: string
-  default_branch: string
+  branch: string
   is_indexed: boolean
 }
 
@@ -43,7 +43,7 @@ export function RepositoryInfo({ repository }: RepositoryInfoProps) {
             {repository.description && <p className="text-sm text-muted-foreground mb-3">{repository.description}</p>}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <GitBranch className="h-4 w-4" />
-              <span>{repository.default_branch}</span>
+              <span>{repository.branch}</span>
             </div>
           </div>
           <Button variant="outline" asChild>

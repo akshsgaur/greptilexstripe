@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
 
     // Index repository with Greptile
     try {
-      const result = await greptile.indexRepository("github", repository.full_name, repository.default_branch)
+      const result = await greptile.indexRepository("github", repository.full_name, repository.branch)
 
       // Update repository with Greptile ID
       await supabase

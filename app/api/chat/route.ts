@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
           {
             remote: "github",
             repository: repository.full_name,
-            branch: repository.default_branch,
+            branch: repository.branch,
           },
         ],
       })
